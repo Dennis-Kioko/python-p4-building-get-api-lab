@@ -53,14 +53,20 @@ def baked_goods_by_price():
 
 @app.route('/baked_goods/most_expensive')
 def most_expensive_baked_good():
-    most_expensive_baked_good = [most_expensive_baked_goods.to_dict() for most_expensive_baked_goods in BakedGood.query.order_by(BakedGood.price.desc()).limit(1).all()]
+    
+    most_expensive_baked_good = BakedGood.query.order_by(BakedGood.price.desc()).first()
+
+    if not most_expensive_baked_good:
+        return jsonify({})
+
+    most_expensive_baked_good_dict = most_expensive_baked_good.to_dict()
 
     response = make_response(
-        jsonify(most_expensive_baked_good),
-        200
+    jsonify(most_expensive_baked_good_dict), 
+    200
     )
-
     return response
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
